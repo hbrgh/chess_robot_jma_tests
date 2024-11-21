@@ -1,0 +1,1 @@
+# chess_robot_jma_tests
