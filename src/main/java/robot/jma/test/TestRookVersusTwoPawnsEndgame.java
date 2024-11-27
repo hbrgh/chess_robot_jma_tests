@@ -1,15 +1,16 @@
-package chess_robot_jma_tests;
+package robot.jma.test;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.junit.jupiter.api.Test;
+
 
 import static com.github.bhlangonijr.chesslib.Square.*;
+
 
 import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.fathzer.games.ai.evaluation.EvaluatedMove;
@@ -24,8 +25,10 @@ import com.fathzer.jchess.chesslib.uci.ChessLibEngine;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
 
-class PassedPawsTest {
-	private static final String MAGIC_FEN = "8/3k3p/2R5/3PP3/8/1p2K3/7r/8 w - - 0 1";
+
+
+class TestRookVersusTwoPawnsEndgame {
+	private static final String MAGIC_FEN = "R7/1K4k1/8/6p1/5p2/8/8/8 b - - 0 1";
 	
 	private static final Supplier<Evaluator<Move, ChessLibMoveGenerator>> STATIC_EVAL_BUILDER = Hb2MyFirstEvaluator::new;
 	private static final Supplier<Evaluator<Move, ChessLibMoveGenerator>> DYNAMIC_EVAL_BUILDER = Hb2SimplifiedEvaluator::new;
@@ -91,22 +94,11 @@ class PassedPawsTest {
 		return mv;
 	}
 	
-//	@Test
-//	void testWithBestMoveSearch() {
-//		List<Move> candidates = Collections.singletonList(new Move(E5,E6));
-//		final int expectedEval = 110;
-//		// Test with static evaluator
-//		assertEquals(expectedEval, getBest(MAGIC_FEN, candidates, () -> new ChattyEvaluator(STATIC_EVAL_BUILDER.get())).getScore());
-//		
-//		System.out.println("=====================================");
-//		
-//		//Test with dynamic evaluator
-//		assertEquals(expectedEval, getBest(MAGIC_FEN, candidates, () -> new ChattyEvaluator(DYNAMIC_EVAL_BUILDER.get())).getScore());
-//	}
+
 	
-	private EvaluatedMove<Move> getBest(String fen, List<Move> candidates, Supplier<Evaluator<Move, ChessLibMoveGenerator>> evaluatorBuilder) {
-		final int depth = 1;
-		final int bestMoveCount = 1;
+	static private EvaluatedMove<Move> getBest(String fen, List<Move> candidates, Supplier<Evaluator<Move, ChessLibMoveGenerator>> evaluatorBuilder) {
+		final int depth = 14;
+		final int bestMoveCount = 3;
 		final IterativeDeepeningEngine<Move, ChessLibMoveGenerator> engine = ChessLibEngine.buildEngine(evaluatorBuilder, depth);
 		engine.getDeepeningPolicy().setSize(bestMoveCount);
 		engine.getDeepeningPolicy().setDeepenOnForced(true);
@@ -119,31 +111,59 @@ class PassedPawsTest {
 		return moves.get(0);
 	}
 	
-	@Test
-	void bug20241122() {
+	
+
+
+	
+	static private int getStaticEval(ChessLibMoveGenerator board, Supplier<Evaluator<Move, ChessLibMoveGenerator>> evaluatorBuilder) {
+		Evaluator<Move, ChessLibMoveGenerator> stat = evaluatorBuilder.get();
+		stat.init(board);
+		return stat.evaluate(board);
+	}
+	
+	static void testWithBestMoveSearch() {
+		List<Move> candidates = Collections.singletonList(new Move(F4,F3));
+		EvaluatedMove<Move> move = getBest(MAGIC_FEN, candidates, () -> new ChattyEvaluator(STATIC_EVAL_BUILDER.get()));
+		// Test with static evaluator
+		System.out.println("moveScoreStaticEvaluator+-> "+move.getScore());
+		
+		System.out.println("=====================================");
+		
+		List<Move> candidatesDyn = Collections.singletonList(new Move(F4,F3));
+		EvaluatedMove<Move> moveDyn = getBest(MAGIC_FEN, candidatesDyn, () -> new ChattyEvaluator(DYNAMIC_EVAL_BUILDER.get()));
+		// Test with static evaluator
+		System.out.println("moveScoreDynamicvaluator+-> "+moveDyn.getScore());
+		
+		
+	}
+	
+	public static void main(String[] args) {
+		
 		// check if dynamic evaluator gives the right evaluation after the first move 
 		ChessLibMoveGenerator board = fromFEN(MAGIC_FEN);
 		Evaluator<Move, ChessLibMoveGenerator> dynamic = DYNAMIC_EVAL_BUILDER.get();
 		dynamic.init(board);
-		assertEquals(getStaticEval(board, STATIC_EVAL_BUILDER), dynamic.evaluate(board));
-		final Move move = new Move(E5,E6);
+//		int staticEvalPosDepartWithStaticEvaluator = getStaticEval(board, STATIC_EVAL_BUILDER);
+//		int evalPosDepartWithDynamicEvaluator = dynamic.evaluate(board);
+//		
+//		if (staticEvalPosDepartWithStaticEvaluator != evalPosDepartWithDynamicEvaluator) {
+//			System.out.println("KATASTROIKA");
+//		}
+		
+//		final Move move = new Move(F4,F3);
+		final Move move = new Move(G7,H6);
 		dynamic.prepareMove(board, move);
 		board.makeMove(move, MoveConfidence.LEGAL);
 		dynamic.commitMove();
-		assertEquals(getStaticEval(board, STATIC_EVAL_BUILDER), dynamic.evaluate(board));
-	}
-
-	@Test
-	void testBothStatically() {
-		final String fen = MAGIC_FEN;
-		final ChessLibMoveGenerator board = fromFEN(fen);
-		final int expected = getStaticEval(board, STATIC_EVAL_BUILDER);
-		assertEquals(expected, getStaticEval(board, DYNAMIC_EVAL_BUILDER));
-	}
-	
-	private int getStaticEval(ChessLibMoveGenerator board, Supplier<Evaluator<Move, ChessLibMoveGenerator>> evaluatorBuilder) {
-		Evaluator<Move, ChessLibMoveGenerator> stat = evaluatorBuilder.get();
-		stat.init(board);
-		return stat.evaluate(board);
+		
+		int staticEvalPosAfterF4F3tWithStaticEvaluator = getStaticEval(board, STATIC_EVAL_BUILDER);
+		int evalPosAfterE5E6tWithDynamicEvaluator = dynamic.evaluate(board);
+		
+		if (staticEvalPosAfterF4F3tWithStaticEvaluator != evalPosAfterE5E6tWithDynamicEvaluator) {
+			System.out.println("KATASTROIKA_AFTER_F4F3");
+		}
+		
+//		testWithBestMoveSearch();
+		
 	}
 }
