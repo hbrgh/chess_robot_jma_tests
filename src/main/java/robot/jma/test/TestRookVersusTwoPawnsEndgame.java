@@ -2,15 +2,15 @@ package robot.jma.test;
 
 
 
+import static com.github.bhlangonijr.chesslib.Square.F3;
+import static com.github.bhlangonijr.chesslib.Square.F4;
+import static com.github.bhlangonijr.chesslib.Square.G7;
+import static com.github.bhlangonijr.chesslib.Square.H6;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-
-
-import static com.github.bhlangonijr.chesslib.Square.*;
-
 
 import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.fathzer.games.ai.evaluation.EvaluatedMove;

@@ -1,16 +1,10 @@
 package robot.jma.test;
 
-import java.util.List;
 import java.util.function.Function;
 
-import com.fathzer.games.ai.evaluation.EvaluatedMove;
-import com.fathzer.games.ai.iterativedeepening.IterativeDeepeningEngine;
 import com.fathzer.games.util.SelectiveComparator;
 import com.fathzer.jchess.chesslib.ChessLibMoveGenerator;
-import com.fathzer.jchess.chesslib.ai.BasicMoveComparator;
 import com.fathzer.jchess.chesslib.ai.eval.hbpg2.Hb2MyFirstEvaluator;
-import com.fathzer.jchess.chesslib.ai.eval.hbpg2.Hb2SimplifiedEvaluator;
-import com.fathzer.jchess.chesslib.uci.ChessLibEngine;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
 

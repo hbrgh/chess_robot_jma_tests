@@ -1,15 +1,14 @@
 package chess_robot_jma_tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.github.bhlangonijr.chesslib.Square.E5;
+import static com.github.bhlangonijr.chesslib.Square.E6;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
-
-import static com.github.bhlangonijr.chesslib.Square.*;
 
 import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.fathzer.games.ai.evaluation.EvaluatedMove;
