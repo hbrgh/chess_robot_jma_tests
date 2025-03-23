@@ -27,19 +27,18 @@ public class EvalPostionFen {
 		return new ChessLibMoveGenerator(board);
 	}
 
-	
+	public static void evalPostWithDetails(String fen) {
+		ChessLibMoveGenerator board = fromFEN(MAGIC_FEN);
+		
+		System.out.println(EvalDisplayUtils.toStringHb(board.getBoard()));
+		int scoreEvalPosStatic = getStaticEval(board, STATIC_EVAL_BUILDER);
+		System.out.println("scoreEvalPosStatic = " + scoreEvalPosStatic);
+	}
 
 	public static void main(String[] args) {
-
-		
-		ChessLibMoveGenerator board = fromFEN(MAGIC_FEN);
-
-		System.out.println(board.getBoard());
-		int scoreEvalPosStatic = getStaticEval(board, STATIC_EVAL_BUILDER);
-
-		System.out.println("scoreEvalPosStatic = " + scoreEvalPosStatic);
-
-		System.out.println(EvalDisplayUtils.toStringHb(board.getBoard()));
+	
+		evalPostWithDetails(MAGIC_FEN);
+	
 
 	}
 
