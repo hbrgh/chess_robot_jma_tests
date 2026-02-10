@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>chess_robot_jma_tests</groupId>
   <artifactId>chess_robot_jma_tests</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0T</version>
     <properties>
 
 		
@@ -19,15 +19,19 @@
 		<dependency>
 		<groupId>com.fathzer</groupId>
 		<artifactId>chesslib-uci-engine</artifactId>
-		<version>0.0.3</version>
-	</dependency>
+		<version>0.0.4</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.10.2</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		
+		</dependencies>
+		
+		
 		<build>
 		<plugins>
 

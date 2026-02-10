@@ -46,13 +46,30 @@ public class TestPassedPawnsDepth1 {
 		final IterativeDeepeningEngine<Move, ChessLibMoveGenerator> engine = ChessLibEngine.buildEngine(Hb2SimplifiedEvaluator::new, depth);
 		engine.getDeepeningPolicy().setSize(bestMoveCount);
 		engine.getDeepeningPolicy().setDeepenOnForced(true);
-		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new)).getBestMoves();
+		final ChessLibMoveGenerator board =fromFEN(fen, BasicMoveComparator::new);
+		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(board).getAccurateMoves();
+//		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new)).getBestMoves();
 		System.out.println(moves);
 		for (EvaluatedMove<Move> move : moves) {
-
-			List<Move> principalVariation = move.getPrincipalVariation();
+			List<Move> principalVariation = engine.getTranspositionTable().collectPV(board, move.getMove(), depth);
+//			List<Move> principalVariation = move.getPrincipalVariation();
 			System.out.println(move+" -> "+principalVariation);
 		}
+		
+	
+////		final IterativeDeepeningEngine<Move, ChessLibMoveGenerator> engine = ChessLibEngine.buildEngine(evaluatorBuilder, depth);
+////		engine.getDeepeningPolicy().setSize(bestMoveCount);
+////		engine.getDeepeningPolicy().setDeepenOnForced(true);
+//		final ChessLibMoveGenerator board =fromFEN(fen, BasicMoveComparator::new);
+//		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(board).getAccurateMoves();
+////		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new), candidates).getBestMoves();
+//		System.out.println(moves);
+//		for (EvaluatedMove<Move> move : moves) {
+////			List<Move> principalVariation = move.getPrincipalVariation();
+//			List<Move> principalVariation = engine.getTranspositionTable().collectPV(board, move.getMove(), depth);
+//			System.out.println(move+" -> "+principalVariation);
+//		}
+//		return moves.get(0);
 
 	}
 

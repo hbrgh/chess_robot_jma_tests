@@ -9,6 +9,7 @@ import com.fathzer.games.util.SelectiveComparator;
 import com.fathzer.jchess.chesslib.ChessLibMoveGenerator;
 import com.fathzer.jchess.chesslib.ai.BasicMoveComparator;
 import com.fathzer.jchess.chesslib.ai.eval.hbpg2.Hb2MyFirstEvaluator;
+import com.fathzer.jchess.chesslib.ai.eval.hbpg2.Hb2SimplifiedEvaluator;
 import com.fathzer.jchess.chesslib.uci.ChessLibEngine;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
@@ -42,17 +43,32 @@ public class TestPassedPawnsDepth1StaticHbEvaluator {
 		System.out.println(internal.toStringFromWhiteViewPoint());
 		
 
+//
+//		final IterativeDeepeningEngine<Move, ChessLibMoveGenerator> engine = ChessLibEngine.buildEngine(Hb2MyFirstEvaluator::new, depth);
+//		engine.getDeepeningPolicy().setSize(bestMoveCount);
+//		engine.getDeepeningPolicy().setDeepenOnForced(true);
+//		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new)).getBestMoves();
+//		System.out.println(moves);
+//		for (EvaluatedMove<Move> move : moves) {
+//
+//			List<Move> principalVariation = move.getPrincipalVariation();
+//			System.out.println(move+" -> "+principalVariation);
+//		}
+		
 
 		final IterativeDeepeningEngine<Move, ChessLibMoveGenerator> engine = ChessLibEngine.buildEngine(Hb2MyFirstEvaluator::new, depth);
 		engine.getDeepeningPolicy().setSize(bestMoveCount);
 		engine.getDeepeningPolicy().setDeepenOnForced(true);
-		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new)).getBestMoves();
+		final ChessLibMoveGenerator board =fromFEN(fen, BasicMoveComparator::new);
+		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(board).getAccurateMoves();
+//		final List<EvaluatedMove<Move>> moves = engine.getBestMoves(fromFEN(fen, BasicMoveComparator::new)).getBestMoves();
 		System.out.println(moves);
 		for (EvaluatedMove<Move> move : moves) {
-
-			List<Move> principalVariation = move.getPrincipalVariation();
+			List<Move> principalVariation = engine.getTranspositionTable().collectPV(board, move.getMove(), depth);
+//			List<Move> principalVariation = move.getPrincipalVariation();
 			System.out.println(move+" -> "+principalVariation);
 		}
+		
 
 	}
 
